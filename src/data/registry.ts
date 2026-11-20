@@ -23,12 +23,28 @@ import { gudaishiMap } from './changshi/gudaishi/overview';
 import { wenxueMap } from './changshi/wenxue/overview';
 import { kejiMap } from './changshi/keji/overview';
 import { minfaMap } from './changshi/minfa/overview';
+import { minfaZongzeMap } from './changshi/minfa/zongze';
+import { minfaHetongMap } from './changshi/minfa/hetong';
 import { xingzhengfaMap } from './changshi/xingzhengfa/overview';
+import { xingzhengXingweiMap } from './changshi/xingzhengfa/xingwei';
+import { xingzhengJiujiMap } from './changshi/xingzhengfa/jiuji';
 import { xingfaMap } from './changshi/xingfa/overview';
+import { xingfaGouchengMap } from './changshi/xingfa/goucheng';
+import { xingfaZuimingMap } from './changshi/xingfa/zuiming';
 import { panduanMap } from './panduan/overview';
+import { panduanTuxingMap } from './panduan/tuxing';
+import { panduanLuojiMap } from './panduan/luoji';
+import { panduanDingyiMap } from './panduan/dingyi';
 import { ziliaoMap } from './ziliao/overview';
+import { ziliaoZengzhangMap } from './ziliao/zengzhang';
+import { ziliaoJisuanMap } from './ziliao/jisuan';
 import { yanyuMap } from './yanyu/overview';
+import { yanyuPianduanMap } from './yanyu/pianduan';
+import { yanyuLuojiMap } from './yanyu/luoji';
 import { shuliangMap } from './shuliang/overview';
+import { shuliangGongchengMap } from './shuliang/gongcheng';
+import { shuliangPailieMap } from './shuliang/pailie';
+import { shuliangJiheMap } from './shuliang/jihe';
 
 export interface SubjectEntry {
   id: string;
@@ -83,31 +99,55 @@ export const MODULES: ModuleEntry[] = [
       },
       { id: 'gudaishi', title: '中国古代史', maps: [gudaishiMap] },
       { id: 'keji', title: '科技', maps: [kejiMap] },
-      { id: 'minfa', title: '民法', maps: [minfaMap] },
-      { id: 'xingzhengfa', title: '行政法', maps: [xingzhengfaMap] },
-      { id: 'xingfa', title: '刑法', maps: [xingfaMap] },
+      { id: 'minfa', title: '民法', maps: [minfaMap, minfaZongzeMap, minfaHetongMap] },
+      {
+        id: 'xingzhengfa',
+        title: '行政法',
+        maps: [xingzhengfaMap, xingzhengXingweiMap, xingzhengJiujiMap],
+      },
+      {
+        id: 'xingfa',
+        title: '刑法',
+        maps: [xingfaMap, xingfaGouchengMap, xingfaZuimingMap],
+      },
       { id: 'wenxue', title: '文学', maps: [wenxueMap] },
     ],
   },
   {
     id: 'yanyu',
     title: '言语理解与表达',
-    subjects: [{ id: 'fangfa', title: '方法总览', maps: [yanyuMap] }],
+    subjects: [
+      { id: 'fangfa', title: '方法总览', maps: [yanyuMap, yanyuPianduanMap, yanyuLuojiMap] },
+    ],
   },
   {
     id: 'shuliang',
     title: '数量关系',
-    subjects: [{ id: 'fangfa', title: '方法总览', maps: [shuliangMap] }],
+    subjects: [
+      {
+        id: 'fangfa',
+        title: '方法总览',
+        maps: [shuliangMap, shuliangGongchengMap, shuliangPailieMap, shuliangJiheMap],
+      },
+    ],
   },
   {
     id: 'panduan',
     title: '判断推理',
-    subjects: [{ id: 'fangfa', title: '方法总览', maps: [panduanMap] }],
+    subjects: [
+      {
+        id: 'fangfa',
+        title: '方法总览',
+        maps: [panduanMap, panduanTuxingMap, panduanLuojiMap, panduanDingyiMap],
+      },
+    ],
   },
   {
     id: 'ziliao',
     title: '资料分析',
-    subjects: [{ id: 'fangfa', title: '方法总览', maps: [ziliaoMap] }],
+    subjects: [
+      { id: 'fangfa', title: '方法总览', maps: [ziliaoMap, ziliaoZengzhangMap, ziliaoJisuanMap] },
+    ],
   },
 ];
 

@@ -36,6 +36,22 @@ const ROUTES = [
   ['ziliao', 'fangfa', 'overview', 'ziliao-overview'],
   ['yanyu', 'fangfa', 'overview', 'yanyu-overview'],
   ['shuliang', 'fangfa', 'overview', 'shuliang-overview'],
+  ['changshi', 'minfa', 'minfa-zongze', 'minfa-zongze'],
+  ['changshi', 'minfa', 'minfa-hetong', 'minfa-hetong'],
+  ['changshi', 'xingzhengfa', 'xingzheng-xingwei', 'xingzheng-xingwei'],
+  ['changshi', 'xingzhengfa', 'xingzheng-jiuji', 'xingzheng-jiuji'],
+  ['changshi', 'xingfa', 'xingfa-goucheng', 'xingfa-goucheng'],
+  ['changshi', 'xingfa', 'xingfa-zuiming', 'xingfa-zuiming'],
+  ['panduan', 'fangfa', 'panduan-tuxing', 'panduan-tuxing'],
+  ['panduan', 'fangfa', 'panduan-luoji', 'panduan-luoji'],
+  ['panduan', 'fangfa', 'panduan-dingyi', 'panduan-dingyi'],
+  ['ziliao', 'fangfa', 'ziliao-zengzhang', 'ziliao-zengzhang'],
+  ['ziliao', 'fangfa', 'ziliao-jisuan', 'ziliao-jisuan'],
+  ['yanyu', 'fangfa', 'yanyu-pianduan', 'yanyu-pianduan'],
+  ['yanyu', 'fangfa', 'yanyu-luoji', 'yanyu-luoji'],
+  ['shuliang', 'fangfa', 'shuliang-gongcheng', 'shuliang-gongcheng'],
+  ['shuliang', 'fangfa', 'shuliang-pailie', 'shuliang-pailie'],
+  ['shuliang', 'fangfa', 'shuliang-jihe', 'shuliang-jihe'],
 ];
 
 const browser = await puppeteer.launch({

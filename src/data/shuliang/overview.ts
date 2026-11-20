@@ -33,7 +33,7 @@ export const shuliangMap = {
       summary: '先定代入顺序，符合即停',
       group: 'jisuan',
       order: 1,
-      refs: ['P2 §2.1–2.3'],
+      refs: ['P2'],
     },
     {
       id: 'shuzi',
@@ -43,7 +43,7 @@ export const shuliangMap = {
       summary: '和差同性；末位判定；比例化最简',
       group: 'jisuan',
       order: 2,
-      refs: ['P2 §2.4–2.10', 'P3 §2.1–2.5'],
+      refs: ['P2', 'P3'],
     },
     {
       id: 'fangcheng',
@@ -52,7 +52,7 @@ export const shuliangMap = {
       summary: '设所求、设小、设最小公倍数；先尾数',
       group: 'jisuan',
       order: 3,
-      refs: ['P4 §2.1–2.6', 'P5 §2.1–2.4'],
+      refs: ['P4', 'P5'],
     },
 
     {
@@ -62,7 +62,7 @@ export const shuliangMap = {
       summary: '设总量为各时间的最小公倍数',
       group: 'gongcheng',
       order: 1,
-      refs: ['P6 §2.1'],
+      refs: ['P6'],
     },
     {
       id: 'xiaolv',
@@ -71,7 +71,7 @@ export const shuliangMap = {
       summary: '给效率比直接赋值，提高20%设5:6',
       group: 'gongcheng',
       order: 2,
-      refs: ['P6 §2.2–2.4'],
+      refs: ['P6'],
     },
 
     {
@@ -82,7 +82,7 @@ export const shuliangMap = {
       summary: '路程一定，速度与时间成反比',
       group: 'xingcheng',
       order: 1,
-      refs: ['P7 §2.1–2.2'],
+      refs: ['P7'],
     },
     {
       id: 'xiangyu',
@@ -91,7 +91,7 @@ export const shuliangMap = {
       summary: '相遇用和、追及用差；环形第n次nS',
       group: 'xingcheng',
       order: 2,
-      refs: ['P7 §2.5–2.6', 'P8 §2.1–2.3'],
+      refs: ['P7', 'P8'],
     },
 
     {
@@ -102,7 +102,7 @@ export const shuliangMap = {
       summary: '分类加、分步乘；先选后排',
       group: 'pailei',
       order: 1,
-      refs: ['P9 §2.1–2.4'],
+      refs: ['P9'],
     },
     {
       id: 'teshu',
@@ -112,7 +112,7 @@ export const shuliangMap = {
       summary: '相邻捆绑、不相邻插空、至少1插板',
       group: 'pailei',
       order: 2,
-      refs: ['P9 §2.5–2.8', 'P10 §2.6–2.10'],
+      refs: ['P9', 'P10'],
     },
     {
       id: 'gailv',
@@ -121,7 +121,7 @@ export const shuliangMap = {
       summary: '满足数÷总数；正面复杂用 1−P 反',
       group: 'pailei',
       order: 3,
-      refs: ['P10 §2.1–2.5'],
+      refs: ['P10'],
     },
 
     {
@@ -131,7 +131,7 @@ export const shuliangMap = {
       summary: '30°比1:√3:2；固定周长圆面积最大',
       group: 'jihe',
       order: 1,
-      refs: ['P13 §2.3–2.5'],
+      refs: ['P13'],
     },
     {
       id: 'xiangsi',
@@ -140,7 +140,7 @@ export const shuliangMap = {
       summary: '面积比＝边长比平方，体积比立方',
       group: 'jihe',
       order: 2,
-      refs: ['P13 §2.5–2.6'],
+      refs: ['P13'],
     },
     {
       id: 'zuiduan',
@@ -149,7 +149,7 @@ export const shuliangMap = {
       summary: '作镜像点连直线；体积＝底面积×升高',
       group: 'jihe',
       order: 3,
-      refs: ['P13 §2.7–2.8'],
+      refs: ['P13'],
     },
 
     {
@@ -160,7 +160,7 @@ export const shuliangMap = {
       summary: '多对象先列表：成本、定价、售价、销量',
       group: 'jingji',
       order: 1,
-      refs: ['P11 §2.1–2.3'],
+      refs: ['P11'],
     },
     {
       id: 'fenduan',
@@ -169,7 +169,7 @@ export const shuliangMap = {
       summary: '画数轴；和定积最大，两括号相等',
       group: 'jingji',
       order: 2,
-      refs: ['P11 §2.5–2.7'],
+      refs: ['P11'],
     },
 
     {
@@ -180,7 +180,7 @@ export const shuliangMap = {
       summary: '最倒霉＋1；排序定位构造求和',
       group: 'zuizhi',
       order: 1,
-      refs: ['P12 §2.1–2.4'],
+      refs: ['P12'],
     },
     {
       id: 'rongchi',
@@ -190,7 +190,7 @@ export const shuliangMap = {
       summary: '三集合非标减只满足两个、减2×三个',
       group: 'zuizhi',
       order: 2,
-      refs: ['P12 §2.5–2.8'],
+      refs: ['P12'],
     },
 
     {
@@ -200,7 +200,7 @@ export const shuliangMap = {
       summary: '年龄差不变；浓度分母是溶液总量',
       group: 'qita',
       order: 1,
-      refs: ['P14 §2.1–2.3', 'P14 §2.4–2.8'],
+      refs: ['P14', 'P14'],
     },
     {
       id: 'niu',
@@ -209,7 +209,7 @@ export const shuliangMap = {
       summary: 'Y＝(N−x)T；平年+1、闰年+2',
       group: 'qita',
       order: 2,
-      refs: ['P15 §2.1–2.6'],
+      refs: ['P15'],
     },
     {
       id: 'tongchou',
@@ -219,7 +219,7 @@ export const shuliangMap = {
       summary: '关键路径不能省；线性+1、环形不加',
       group: 'qita',
       order: 3,
-      refs: ['P16 §2.1–2.8'],
+      refs: ['P16'],
     },
   ],
   edges: [
