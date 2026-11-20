@@ -2,9 +2,23 @@ import type { KnowledgeMap } from './types';
 import { overviewMap } from './changshi/dangshi/overview';
 import { tudiGemingMap } from './changshi/dangshi/tudi-geming';
 import { meetingsMap } from './changshi/dangshi/meetings';
+import { dangshiP2Map } from './changshi/dangshi/p2';
+import { dangshiP4Map } from './changshi/dangshi/p4';
+import { dangshiP5Map } from './changshi/dangshi/p5';
+import { dangshiBattlesMap } from './changshi/dangshi/battles';
+import { dangshiReciteMap } from './changshi/dangshi/recite';
 import { zhongteMap } from './changshi/zhongte/overview';
+import { zhongteMingqueMap } from './changshi/zhongte/mingque';
+import { zhongteWuweiMap } from './changshi/zhongte/wuwei';
+import { zhongteSigeMap } from './changshi/zhongte/sige';
 import { mazheMap } from './changshi/mazhe/overview';
+import { mazheWeiwuMap } from './changshi/mazhe/weiwu';
+import { mazheBianzhengMap } from './changshi/mazhe/bianzheng';
+import { mazheRenshiMap } from './changshi/mazhe/renshi';
 import { jingjiMap } from './changshi/jingji/overview';
+import { jingjiWeiguanMap } from './changshi/jingji/weiguan';
+import { jingjiHongguanMap } from './changshi/jingji/hongguan';
+import { jingjiGuojiiMap } from './changshi/jingji/guojii';
 import { gudaishiMap } from './changshi/gudaishi/overview';
 import { wenxueMap } from './changshi/wenxue/overview';
 import { kejiMap } from './changshi/keji/overview';
@@ -41,11 +55,32 @@ export const MODULES: ModuleEntry[] = [
       {
         id: 'dangshi',
         title: '党史',
-        maps: [overviewMap, tudiGemingMap, meetingsMap],
+        maps: [
+          overviewMap,
+          tudiGemingMap,
+          meetingsMap,
+          dangshiP2Map,
+          dangshiP4Map,
+          dangshiP5Map,
+          dangshiBattlesMap,
+          dangshiReciteMap,
+        ],
       },
-      { id: 'zhongte', title: '中特', maps: [zhongteMap] },
-      { id: 'mazhe', title: '马哲', maps: [mazheMap] },
-      { id: 'jingji', title: '经济', maps: [jingjiMap] },
+      {
+        id: 'zhongte',
+        title: '中特',
+        maps: [zhongteMap, zhongteMingqueMap, zhongteWuweiMap, zhongteSigeMap],
+      },
+      {
+        id: 'mazhe',
+        title: '马哲',
+        maps: [mazheMap, mazheWeiwuMap, mazheBianzhengMap, mazheRenshiMap],
+      },
+      {
+        id: 'jingji',
+        title: '经济',
+        maps: [jingjiMap, jingjiWeiguanMap, jingjiHongguanMap, jingjiGuojiiMap],
+      },
       { id: 'gudaishi', title: '中国古代史', maps: [gudaishiMap] },
       { id: 'keji', title: '科技', maps: [kejiMap] },
       { id: 'minfa', title: '民法', maps: [minfaMap] },
