@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { MODULES } from '../data/registry';
 import type { MapNote } from '../data/types';
 import { mapHref } from '../hooks/useHashRoute';
+import SearchBox from './SearchBox';
 
 interface NavProps {
   active?: { moduleId: string; subjectId: string; mapId: string };
@@ -25,6 +26,8 @@ export default function Nav({ active, onNavigate, themeToggle, notes }: NavProps
         </a>
         {themeToggle}
       </div>
+
+      <SearchBox onNavigate={onNavigate} />
 
       {MODULES.map((module) => (
         <div key={module.id}>

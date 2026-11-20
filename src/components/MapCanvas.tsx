@@ -1,14 +1,17 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Background,
   BackgroundVariant,
   Controls,
   MarkerType,
   ReactFlow,
+  getNodesBounds,
+  getViewportForBounds,
   type Edge,
   type EdgeTypes,
   type Node,
   type NodeTypes,
+  type ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/style.css';
 import type { EdgeKind, KnowledgeMap, NodeKind } from '../data/types';
@@ -16,6 +19,7 @@ import { validateMap } from '../data/validate';
 import { layoutMap } from '../layout';
 import type { Theme } from '../hooks/useTheme';
 import Legend from './Legend';
+import NodePanel from './NodePanel';
 import KnEdge from './edges/KnEdge';
 import BandNode from './nodes/BandNode';
 import KnowledgeNode from './nodes/KnowledgeNode';
@@ -61,11 +65,17 @@ const KIND_ORDER: NodeKind[] = [
 interface MapCanvasProps {
   map: KnowledgeMap;
   theme: Theme;
+  focusNode?: string;
 }
 
-export default function MapCanvas({ map, theme }: MapCanvasProps) {
+export default function MapCanvas({ map, theme, focusNode }: MapCanvasProps) {
   const isMobile =
     typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches;
+
+  const [selectedId, setSelectedId] = useState<string | null>(focusNode ?? null);
+  const [instance, setInstance] = useState<ReactFlowInstance | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [quiz, setQuiz] = useState(false);
 
   const { nodes, edges, kinds } = useMemo(() => {
     if (import.meta.env.DEV) {
@@ -97,6 +107,7 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
         position: { x: item.x, y: item.y },
         data: { node: item.node },
         style: { width: item.width, height: item.height },
+        className: selectedId === item.id ? 'is-focus' : undefined,
         draggable: false,
         selectable: false,
         connectable: false,
@@ -127,9 +138,37 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
       edges: flowEdges,
       kinds: KIND_ORDER.filter((k) => present.has(k)),
     };
-  }, [map, theme]);
+  }, [map, theme, selectedId]);
 
-  const onInit = useCallback(() => {
+  const fitNode = useCallback(
+    (id: string) => {
+      if (!instance) return;
+      if (isMobile) {
+        const node = instance.getNode(id);
+        if (node) {
+          const width = node.measured?.width ?? 230;
+          const height = node.measured?.height ?? 132;
+          const cx = node.position.x + width / 2;
+          const cy = node.position.y + height / 2;
+          // 手机上详情面板占下半屏，把节点放到上半屏
+          instance.setCenter(cx, cy + 150, { zoom: 0.9, duration: 500 });
+          return;
+        }
+      }
+      instance.fitView({ nodes: [{ id }], padding: 240, maxZoom: 1.15, duration: 500 });
+    },
+    [instance, isMobile],
+  );
+
+  useEffect(() => {
+    if (!focusNode) return;
+    setSelectedId(focusNode);
+    const timer = window.setTimeout(() => fitNode(focusNode), 120);
+    return () => window.clearTimeout(timer);
+  }, [focusNode, fitNode]);
+
+  const onInit = useCallback((rf: ReactFlowInstance) => {
+    setInstance(rf);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         document
@@ -139,6 +178,50 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
     });
   }, []);
 
+  const exportPng = useCallback(async () => {
+    if (!instance) return;
+    const viewportEl = document.querySelector<HTMLElement>(
+      '.graph-canvas .react-flow__viewport',
+    );
+    if (!viewportEl) return;
+
+    setExporting(true);
+    try {
+      const allNodes = instance.getNodes();
+      const bounds = getNodesBounds(allNodes);
+      if (bounds.width <= 0 || bounds.height <= 0) throw new Error('节点尚未测量完成');
+
+      const maxSide = 3200;
+      const scale = Math.min(1.6, maxSide / Math.max(bounds.width, bounds.height));
+      const width = Math.max(900, Math.round(bounds.width * scale));
+      const height = Math.max(600, Math.round(bounds.height * scale));
+      const vp = getViewportForBounds(bounds, width, height, 0.05, 2, 24);
+      const { toPng } = await import('html-to-image');
+
+      const dataUrl = await toPng(viewportEl, {
+        backgroundColor: theme === 'dark' ? '#0d1524' : '#f8fafc',
+        width,
+        height,
+        cacheBust: true,
+        pixelRatio: 1,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `translate(${vp.x}px, ${vp.y}px) scale(${vp.zoom})`,
+        },
+      });
+
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${map.module}-${map.subject}-${map.title}.png`;
+      link.click();
+    } catch (error) {
+      console.error('[KnowledgeNotes] 导出 PNG 失败', error);
+    } finally {
+      setExporting(false);
+    }
+  }, [instance, map, theme]);
+
   const initialViewport =
     map.layout.type === 'columns'
       ? { x: 40, y: isMobile ? 24 : 30, zoom: isMobile ? 0.75 : 0.85 }
@@ -146,8 +229,12 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
         ? { x: 50, y: isMobile ? 115 : 52, zoom: isMobile ? 0.72 : 0.8 }
         : { x: 40, y: isMobile ? 175 : 122, zoom: isMobile ? 0.7 : 0.78 };
 
+  const selectedNode = selectedId
+    ? map.nodes.find((node) => node.id === selectedId)
+    : undefined;
+
   return (
-    <div className="map-stage" data-layout={map.layout.type}>
+    <div className={`map-stage ${quiz ? 'is-quiz' : ''}`} data-layout={map.layout.type}>
       <div className="canvas-head">
         <div className="canvas-head__kicker">
           {map.module} · {map.subject}
@@ -175,6 +262,10 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
             forceColorMode={theme}
             proOptions={{ hideAttribution: true }}
             onInit={onInit}
+            onNodeClick={(_, node) => {
+              if (node.type === 'knowledge') setSelectedId(node.id);
+            }}
+            onPaneClick={() => setSelectedId(null)}
           >
             <Background
               variant={BackgroundVariant.Dots}
@@ -187,6 +278,38 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
         </div>
 
         <Legend kinds={kinds} />
+
+        <button
+          type="button"
+          className={`quiz-btn ${quiz ? 'is-on' : ''}`}
+          onClick={() => setQuiz((v) => !v)}
+          title={quiz ? '显示卡片上的考点' : '隐藏卡片考点，点节点自测'}
+        >
+          {quiz ? '退出自测' : '自测模式'}
+        </button>
+
+        <button
+          type="button"
+          className="export-btn"
+          onClick={exportPng}
+          disabled={exporting}
+        >
+          {exporting ? '导出中…' : '导出 PNG'}
+        </button>
+
+        {selectedNode ? (
+          <NodePanel
+            key={`${selectedNode.id}-${quiz ? 'quiz' : 'read'}`}
+            node={selectedNode}
+            map={map}
+            quizMode={quiz}
+            onClose={() => setSelectedId(null)}
+            onSelect={(id) => {
+              setSelectedId(id);
+              fitNode(id);
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );

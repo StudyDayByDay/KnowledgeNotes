@@ -5,6 +5,8 @@ import { useTheme } from './hooks/useTheme';
 import type { Theme } from './hooks/useTheme';
 import MapCanvas from './components/MapCanvas';
 import Nav from './components/Nav';
+import DailyReview from './components/DailyReview';
+import SearchBox from './components/SearchBox';
 import ThemeToggle from './components/ThemeToggle';
 
 interface ThemeProps {
@@ -29,6 +31,12 @@ function Home({ theme, onToggle }: ThemeProps) {
           </div>
           <ThemeToggle theme={theme} onToggle={onToggle} />
         </header>
+
+        <div className="home-search">
+          <SearchBox />
+        </div>
+
+        <DailyReview />
 
         {activeModules.map((module) => (
           <section className="module-block" key={module.id}>
@@ -82,9 +90,15 @@ function MapPage({
   moduleId,
   subjectId,
   mapId,
+  focusNode,
   theme,
   onToggle,
-}: ThemeProps & { moduleId: string; subjectId: string; mapId: string }) {
+}: ThemeProps & {
+  moduleId: string;
+  subjectId: string;
+  mapId: string;
+  focusNode?: string;
+}) {
   const map = findMap(moduleId, subjectId, mapId);
   const [navOpen, setNavOpen] = useState(false);
 
@@ -105,6 +119,17 @@ function MapPage({
           ☰
         </button>
         <div className="topbar__title">{map.title}</div>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="搜索"
+          onClick={() => setNavOpen(true)}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M15.5 15.5 20 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
         {toggle}
       </div>
 
@@ -113,7 +138,7 @@ function MapPage({
           <Nav active={active} themeToggle={toggle} notes={map.notes} />
         </aside>
         <div className="canvas-wrap">
-          <MapCanvas map={map} theme={theme} />
+          <MapCanvas map={map} theme={theme} focusNode={focusNode} />
         </div>
       </div>
 
@@ -161,6 +186,7 @@ export default function App() {
         moduleId={route.moduleId}
         subjectId={route.subjectId}
         mapId={route.mapId}
+        focusNode={route.focusNode}
         theme={theme}
         onToggle={toggle}
       />
