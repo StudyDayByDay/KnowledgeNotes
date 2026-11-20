@@ -234,7 +234,10 @@ export default function MapCanvas({ map, theme, focusNode }: MapCanvasProps) {
     : undefined;
 
   return (
-    <div className={`map-stage ${quiz ? 'is-quiz' : ''}`} data-layout={map.layout.type}>
+    <div
+      className={`map-stage ${quiz ? 'is-quiz' : ''} ${selectedNode ? 'has-panel' : ''}`}
+      data-layout={map.layout.type}
+    >
       <div className="canvas-head">
         <div className="canvas-head__kicker">
           {map.module} · {map.subject}

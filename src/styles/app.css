@@ -1144,3 +1144,16 @@ button {
     bottom: 54px;
   }
 }
+
+/* 详情面板打开时，把右下角按钮移到面板左侧，避免被盖住 */
+.map-stage.has-panel .quiz-btn,
+.map-stage.has-panel .export-btn {
+  right: 372px;
+}
+
+@media (max-width: 900px) {
+  .map-stage.has-panel .quiz-btn,
+  .map-stage.has-panel .export-btn {
+    display: none;
+  }
+}
