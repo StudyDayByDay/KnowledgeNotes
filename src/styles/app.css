@@ -42,7 +42,8 @@ button {
 .home-inner {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 40px 20px 96px;
+  padding: calc(40px + env(safe-area-inset-top)) 20px
+    calc(96px + env(safe-area-inset-bottom));
 }
 
 .home-top {
@@ -241,9 +242,9 @@ button {
   display: none;
   align-items: center;
   gap: 10px;
-  height: 52px;
-  padding: 0 12px;
-  padding-top: env(safe-area-inset-top);
+  height: calc(52px + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) max(12px, env(safe-area-inset-right)) 0
+    max(12px, env(safe-area-inset-left));
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 }
@@ -290,7 +291,8 @@ button {
   width: 280px;
   max-width: 84vw;
   background: var(--surface);
-  padding: 18px 14px 40px;
+  padding: calc(18px + env(safe-area-inset-top)) 14px
+    calc(40px + env(safe-area-inset-bottom));
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
 }
@@ -718,14 +720,15 @@ button {
   }
 
   .react-flow__controls {
-    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
     bottom: 10px;
   }
 }
 
 @media (max-width: 560px) {
   .home-inner {
-    padding: 26px 16px 76px;
+    padding: calc(26px + env(safe-area-inset-top)) 16px
+      calc(76px + env(safe-area-inset-bottom));
   }
 
   .card-grid {
@@ -1097,7 +1100,7 @@ button {
     top: auto;
     left: 10px;
     right: 10px;
-    bottom: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
     width: auto;
     max-height: 62%;
     border-radius: 16px;
@@ -1105,7 +1108,7 @@ button {
 
   .export-btn {
     right: 10px;
-    bottom: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }
 
@@ -1141,7 +1144,7 @@ button {
 @media (max-width: 900px) {
   .quiz-btn {
     right: 10px;
-    bottom: 54px;
+    bottom: calc(54px + env(safe-area-inset-bottom));
   }
 }
 

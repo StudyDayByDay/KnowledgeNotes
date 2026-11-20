@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MODULES, findMap } from './data/registry';
 import { mapHref, useHashRoute } from './hooks/useHashRoute';
+import { goBack } from './hooks/useBack';
 import { useTheme } from './hooks/useTheme';
 import type { Theme } from './hooks/useTheme';
 import MapCanvas from './components/MapCanvas';
@@ -101,6 +102,36 @@ function MapPage({
 }) {
   const map = findMap(moduleId, subjectId, mapId);
   const [navOpen, setNavOpen] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  // iOS 主屏幕模式没有 Safari 的边缘滑动返回，这里在左边缘补一个
+  useEffect(() => {
+    const el = shellRef.current;
+    if (!el) return;
+    let start: { x: number; y: number } | null = null;
+
+    const onStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      start =
+        touch && touch.clientX < 28 ? { x: touch.clientX, y: touch.clientY } : null;
+    };
+    const onEnd = (event: TouchEvent) => {
+      const origin = start;
+      start = null;
+      if (!origin) return;
+      const touch = event.changedTouches[0];
+      if (touch && touch.clientX - origin.x > 80 && Math.abs(touch.clientY - origin.y) < 60) {
+        goBack();
+      }
+    };
+
+    el.addEventListener('touchstart', onStart, { capture: true, passive: true });
+    el.addEventListener('touchend', onEnd, { capture: true, passive: true });
+    return () => {
+      el.removeEventListener('touchstart', onStart, { capture: true });
+      el.removeEventListener('touchend', onEnd, { capture: true });
+    };
+  }, []);
 
   if (!map) return <NotFound />;
 
@@ -108,8 +139,24 @@ function MapPage({
   const toggle = <ThemeToggle theme={theme} onToggle={onToggle} />;
 
   return (
-    <div className="map-shell">
+    <div className="map-shell" ref={shellRef}>
       <div className="topbar">
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="返回"
+          onClick={goBack}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M15 5 8 12l7 7"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
         <button
           type="button"
           className="icon-btn"
