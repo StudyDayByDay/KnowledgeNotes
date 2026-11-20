@@ -5,10 +5,23 @@ const BASE = process.env.KN_BASE ?? 'http://127.0.0.1:5173';
 const DARK = process.env.KN_DARK === '1';
 const ONLY = process.env.KN_SET ?? 'all';
 
-const MAPS = [
-  ['overview', '党史总览'],
-  ['tudi-geming', '土地革命'],
-  ['meetings', '中共会议链'],
+const ROUTES = [
+  ['changshi', 'dangshi', 'overview', 'dangshi-overview'],
+  ['changshi', 'dangshi', 'tudi-geming', 'dangshi-tudi'],
+  ['changshi', 'dangshi', 'meetings', 'dangshi-meetings'],
+  ['changshi', 'zhongte', 'overview', 'zhongte-overview'],
+  ['changshi', 'mazhe', 'overview', 'mazhe-overview'],
+  ['changshi', 'jingji', 'overview', 'jingji-overview'],
+  ['changshi', 'gudaishi', 'overview', 'gudaishi-overview'],
+  ['changshi', 'wenxue', 'overview', 'wenxue-overview'],
+  ['changshi', 'keji', 'overview', 'keji-overview'],
+  ['changshi', 'minfa', 'overview', 'minfa-overview'],
+  ['changshi', 'xingzhengfa', 'overview', 'xingzhengfa-overview'],
+  ['changshi', 'xingfa', 'overview', 'xingfa-overview'],
+  ['panduan', 'fangfa', 'overview', 'panduan-overview'],
+  ['ziliao', 'fangfa', 'overview', 'ziliao-overview'],
+  ['yanyu', 'fangfa', 'overview', 'yanyu-overview'],
+  ['shuliang', 'fangfa', 'overview', 'shuliang-overview'],
 ];
 
 const browser = await puppeteer.launch({
@@ -19,7 +32,7 @@ const browser = await puppeteer.launch({
 
 let failures = 0;
 
-async function shoot(mapId, size, name) {
+async function shoot(moduleId, subjectId, mapId, name, size) {
   const page = await browser.newPage();
   if (DARK) {
     await page.evaluateOnNewDocument(() => {
@@ -29,7 +42,11 @@ async function shoot(mapId, size, name) {
   const errors = [];
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
   page.on('console', (m) => {
-    if (m.type() === 'error') errors.push(`console: ${m.text()}`);
+    const text = m.text();
+    if (m.type() === 'error') errors.push(`console: ${text}`);
+    if (m.type() === 'warning' && text.includes('[KnowledgeNotes]')) {
+      errors.push(`data: ${text}`);
+    }
   });
 
   const mobile = size.width <= 900;
@@ -41,10 +58,10 @@ async function shoot(mapId, size, name) {
     hasTouch: mobile,
   });
 
-  const url = `${BASE}/#/m/changshi/dangshi/${mapId}`;
+  const url = `${BASE}/#/m/${moduleId}/${subjectId}/${mapId}`;
   await page.goto(url, { waitUntil: 'networkidle0' });
   await page.waitForSelector('[data-graph-ready="true"]', { timeout: 15000 });
-  await new Promise((r) => setTimeout(r, 400));
+  await new Promise((r) => setTimeout(r, 350));
 
   const info = await page.evaluate(() => {
     const rect = (sel) => {
@@ -53,27 +70,30 @@ async function shoot(mapId, size, name) {
       const r = el.getBoundingClientRect();
       return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) };
     };
+    const clipped = [...document.querySelectorAll('.kn-node')].flatMap((card) => {
+      const name = card.querySelector('.kn-node__title')?.textContent ?? '';
+      const hit = [];
+      for (const sel of ['.kn-node__title', '.kn-node__sub', '.kn-node__summary']) {
+        const el = card.querySelector(sel);
+        if (el && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)) {
+          hit.push(sel);
+        }
+      }
+      return hit.length ? [{ name, hit }] : [];
+    });
     return {
       viewport: { w: innerWidth, h: innerHeight },
-      bodyScroll: document.body.scrollWidth,
-      shell: rect('.map-shell'),
-      canvasWrap: rect('.canvas-wrap'),
       graphArea: rect('.graph-area'),
-      legend: rect('.legend'),
-      notes: rect('.side-notes'),
-      topbar: rect('.topbar'),
-      topbarButtons: [...document.querySelectorAll('.topbar .icon-btn')].map((b) => ({
-        text: b.textContent?.trim(),
-        rect: b.getBoundingClientRect().toJSON(),
-      })),
       nodeCount: document.querySelectorAll('.react-flow__node').length,
       edgeCount: document.querySelectorAll('.react-flow__edge').length,
+      clipped,
     };
   });
 
   await page.screenshot({ path: `screenshots/${name}.png` });
   console.log(`\n=== ${name} ===`);
-  console.log(JSON.stringify(info, null, 2));
+  console.log(JSON.stringify(info));
+  if (info.clipped.length) failures += info.clipped.length;
   if (errors.length) {
     failures += errors.length;
     console.log('ERRORS:', errors);
@@ -81,14 +101,21 @@ async function shoot(mapId, size, name) {
   await page.close();
 }
 
-for (const [id] of MAPS) {
+for (const [moduleId, subjectId, mapId, name] of ROUTES) {
   if (ONLY !== 'mobile') {
-    await shoot(id, { width: 1440, height: 900 }, `${id}-desktop${DARK ? '-dark' : ''}`);
+    await shoot(moduleId, subjectId, mapId, `${name}-desktop${DARK ? '-dark' : ''}`, {
+      width: 1440,
+      height: 900,
+    });
   }
   if (ONLY !== 'desktop') {
-    await shoot(id, { width: 390, height: 844, scale: 2 }, `${id}-mobile${DARK ? '-dark' : ''}`);
+    await shoot(moduleId, subjectId, mapId, `${name}-mobile${DARK ? '-dark' : ''}`, {
+      width: 390,
+      height: 844,
+      scale: 2,
+    });
   }
 }
 
 await browser.close();
-console.log(failures ? `\n${failures} browser errors` : '\nno browser errors');
+console.log(failures ? `\n${failures} issues` : '\nno browser errors, no clipped text');

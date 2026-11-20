@@ -3,11 +3,12 @@
 把行测文字笔记重新组织成**可放大的大图**：颜色区分语义，箭头表达关系。
 纯前端，部署在 GitHub Pages，手机随时翻看。
 
-首期样板（常识判断 · 党史）：
+当前覆盖（第一轮：每个科目至少一张总览）：
 
-- 党史总览（1840 至今）
-- 土地革命（1927–1937）
-- 中共会议链（1921–1949）
+- **常识判断**：党史 3 张（总览 / 土地革命 / 会议链）；中特、马哲、经济、中国古代史、文学、科技、民法、行政法、刑法各 1 张总览
+- **言语理解与表达**、**判断推理**、**数量关系**、**资料分析**：各 1 张方法总览
+
+常识判断 143 篇笔记已全部被图谱的 `refs` 引用；全库 209/234 篇（其余为真题卷、练习册、前言）。
 
 ## 本地运行
 
@@ -27,7 +28,8 @@ npm run dev
 npm run dev          # 开发
 npm run build        # 类型检查 + 生产构建
 npm run preview      # 预览 dist
-node scripts/screenshot.mjs   # 用本机 Chrome 截图三张图（桌面 + 手机）
+node scripts/screenshot.mjs   # 用本机 Chrome 截图全部图（桌面 + 手机）
+node scripts/coverage.mjs     # 统计哪些笔记已被图谱引用
 KN_DARK=1 KN_SET=desktop node scripts/screenshot.mjs   # 深色桌面截图
 ```
 

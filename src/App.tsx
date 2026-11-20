@@ -71,7 +71,7 @@ function Home({ theme, onToggle }: ThemeProps) {
         ) : null}
 
         <footer style={{ color: 'var(--muted)', fontSize: 12, marginTop: 28 }}>
-          内容整理自党史视频笔记（P1–P5），每张图保留来源章节，便于回查。
+          内容整理自行测各科视频笔记，每张图保留来源章节（refs），便于回查。
         </footer>
       </div>
     </div>

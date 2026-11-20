@@ -6,6 +6,7 @@ import {
   MarkerType,
   ReactFlow,
   type Edge,
+  type EdgeTypes,
   type Node,
   type NodeTypes,
 } from '@xyflow/react';
@@ -15,12 +16,17 @@ import { validateMap } from '../data/validate';
 import { layoutMap } from '../layout';
 import type { Theme } from '../hooks/useTheme';
 import Legend from './Legend';
+import KnEdge from './edges/KnEdge';
 import BandNode from './nodes/BandNode';
 import KnowledgeNode from './nodes/KnowledgeNode';
 
 const nodeTypes: NodeTypes = {
   knowledge: KnowledgeNode,
   band: BandNode,
+};
+
+const edgeTypes: EdgeTypes = {
+  kn: KnEdge,
 };
 
 const EDGE_HEX: Record<Theme, Record<EdgeKind, string>> = {
@@ -103,13 +109,9 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
       id: e.id,
       source: e.source,
       target: e.target,
-      type: 'smoothstep',
+      type: 'kn',
       className: `kn-edge kn-edge--${e.kind}`,
-      label: e.label,
-      labelStyle: { fill: 'var(--muted)', fontSize: 11, fontWeight: 600 },
-      labelBgStyle: { fill: 'var(--canvas)', fillOpacity: 0.95 },
-      labelBgPadding: [6, 3],
-      labelBgBorderRadius: 4,
+      data: { label: e.label },
       markerEnd: {
         type: MarkerType.ArrowClosed,
         width: 16,
@@ -145,7 +147,7 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
         : { x: 40, y: isMobile ? 175 : 122, zoom: isMobile ? 0.7 : 0.78 };
 
   return (
-    <div className="map-stage">
+    <div className="map-stage" data-layout={map.layout.type}>
       <div className="canvas-head">
         <div className="canvas-head__kicker">
           {map.module} · {map.subject}
@@ -161,6 +163,7 @@ export default function MapCanvas({ map, theme }: MapCanvasProps) {
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             defaultViewport={initialViewport}
             minZoom={0.05}
             maxZoom={2.2}
