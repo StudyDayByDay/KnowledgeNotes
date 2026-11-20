@@ -106,6 +106,11 @@ function MapPage({
 
   // iOS 主屏幕模式没有 Safari 的边缘滑动返回，这里在左边缘补一个
   useEffect(() => {
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+    if (!standalone) return;
+
     const el = shellRef.current;
     if (!el) return;
     let start: { x: number; y: number } | null = null;
